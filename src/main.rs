@@ -153,7 +153,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             temp.push_str(format!(" {}",i).as_str());
                             break;
                         }
-                        sleep(Duration::from_secs(30));
+                        sleep(Duration::from_secs(10));
                         page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.press_key("Enter").await?;
                         fs::remove_file("output.mp4");
                         println!("File deleted successfully");
@@ -167,6 +167,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
         sleep(Duration::from_secs(2));
+        page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.press_key("Enter").await?;
     }
     handle.await?;
     Ok(())
