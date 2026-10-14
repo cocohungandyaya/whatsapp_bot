@@ -1,0 +1,9 @@
+[package]
+name = "whatsapp_bot"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+chromiumoxide = "0.9.1"
+futures = "0.3.34"
+tokio = "1.53.3"
