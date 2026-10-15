@@ -53,16 +53,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let mut resolution:String=String::new();
                 let mut rev:String=String::new();
                 if i.contains("/fv"){
-                    resolution="bv+ba";
-                    rev="Highest";
+                    resolution="bv+ba".to_string();
+                    rev="Highest".to_string();
                 }else{
-                    resolution="bv*[height<=720]+ba/b[height<=720]";
-                    rev="720p";
+                    resolution="bv*[height<=720]+ba/b[height<=720]".to_string();
+                    rev="720p".to_string();
                 }
                 for j in i.split(" ").collect::<Vec<_>>(){
                     if j.contains("https"){
                         page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str(format!("REQUEST RECIEVED,NOW ATTEMPT DOWNLOAD GIVEN URL:{},Resolution:{}",j,rev)).await?.press_key("Enter").await?;
-                        let output = Command::new("yt-dlp").args(["-f",resolution,j,"-o","output"]).output().unwrap();
+                        let output = Command::new("yt-dlp").args(["-f",resolution.as_str(),j,"-o","output"]).output().unwrap();
                         let mut stdout = String::new();
                         if output.status.success() {
                             stdout=String::from_utf8_lossy(&output.stdout).to_string();
