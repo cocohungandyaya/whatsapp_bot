@@ -4,7 +4,10 @@ use std::{thread::sleep,time::Duration};
 use std::io::{self,Write};
 use std::process::Command;
 use std::fs;
-
+//#main > div.x1n2onr6.x1vjfegm.x1cqoux5.x14yy4lh > div > div > div.x10l6tqk.x13vifvy.x1o0tod.xupqr0c.x9f619.x78zum5.xdt5ytf.xh8yej3.x5yr21d.x6ikm8r.x1rife3k.xjbqb8w.x1ewm37j > div.x3psx0u.x12xbjc7.x1c1uobl.x1yjeaew.xh8yej3.xquzyny.xvc5jky.x11t971q
+//that is scan
+//#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p
+//this is input
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (mut browser, mut handler) =
@@ -166,7 +169,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 dialogue=dialogue.split(i).collect::<Vec<_>>().join("");
             }
         }
-        sleep(Duration::from_secs(2));    }
+        sleep(Duration::from_secs(2));    
+    }
     handle.await?;
     Ok(())
 }
