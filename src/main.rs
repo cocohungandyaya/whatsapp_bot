@@ -49,7 +49,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
         }
         for i in list_c_dialogue{
-            if (i.contains("/v")||i.contains("/fv")) && !(dialogue.contains(i)) && !(temp.contains(i)){
+            if (i.contains("/v ")||i.contains("/fv ")||i.contains(" /v")||i.contains(" /fv")) && !(dialogue.contains(i)) && !(temp.contains(i)){
                 let mut resolution:String=String::new();
                 let mut rev:String=String::new();
                 if i.contains("/fv"){
