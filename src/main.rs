@@ -49,11 +49,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
         }
         for i in list_c_dialogue{
-            if (i.contains("/v ")||i.contains("/fv ")||i.contains(" /v")||i.contains(" /fv")) && !(dialogue.contains(i)) && !(temp.contains(i)){
+            if (i.contains("/v ")||i.contains("/fv ")||i.contains(" /v")||i.contains(" /fv")||i.contains(" /sv")||i.contains("/sv ")) && !(dialogue.contains(i)) && !(temp.contains(i)){
                 let mut resolution:String=String::new();
                 let mut rev:String=String::new();
-                if i.contains("/fv"){
+                if i.contains(" /fv")||i.contains("/fv "){
                     rev="Highest".to_string();
+                }else if i.contains("/sv ")||i.contains(" /sv"){
+                    resolution="bv*[height<=360]+ba/b[height<=360]".to_string();
+                    rev="360p".to_string();
                 }else{
                     resolution="bv*[height<=720]+ba/b[height<=720]".to_string();
                     rev="720p".to_string();
@@ -63,6 +66,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str(format!("REQUEST RECIEVED,Resolution SET:{},NOW ATTEMPT DOWNLOAD GIVEN URL:{}",rev,j)).await?.press_key("Enter").await?;
                         let mut output=Command::new("yt-dlp").output().unwrap();
                         if resolution=="bv*[height<=720]+ba/b[height<=720]" {
+                            output=Command::new("yt-dlp").args(["-f",resolution.as_str(),j,"-o","output"]).output().unwrap();
+                        }else if resolution=="bv*[height<=360]+ba/b[height<=360]"{
                             output=Command::new("yt-dlp").args(["-f",resolution.as_str(),j,"-o","output"]).output().unwrap();
                         }else{
                             output=Command::new("yt-dlp").args([j,"-o","output"]).output().unwrap();
