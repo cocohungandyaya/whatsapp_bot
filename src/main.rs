@@ -67,14 +67,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         let mut j:String="https".to_string();
                         j.push_str(rt[1]);
                         let j:&str=j.as_str();
-                        page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str(format!("REQUEST RECIEVED,Resolution SET:{},NOW ATTEMPT DOWNLOAD GIVEN URL:{}",rev,j)).await?.press_key("Enter").await?;
+                        page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str(format!("REQUEST RECIEVED,Resolution SET:{}",rev)).await?.press_key("Enter").await?;
                         let mut output=Command::new("yt-dlp").output().unwrap();
                         if resolution=="bv*[height<=720]+ba/b[height<=720]" {
-                            output=Command::new("yt-dlp").args(["-f",resolution.as_str(),j,"-o","output"]).output().unwrap();
+                            output=Command::new("yt-dlp").args(["--user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","--add-header","User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","-f",resolution.as_str(),j,"-o","output"]).output().unwrap();
                         }else if resolution=="bv*[height<=360]+ba/b[height<=360]"{
-                            output=Command::new("yt-dlp").args(["-f",resolution.as_str(),j,"-o","output"]).output().unwrap();
+                            output=Command::new("yt-dlp").args(["--user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","--add-header","User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","-f",resolution.as_str(),j,"-o","output"]).output().unwrap();
                         }else{
-                            output=Command::new("yt-dlp").args([j,"-o","output"]).output().unwrap();
+                            output=Command::new("yt-dlp").args(["--user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","--add-header","User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",j,"-o","output"]).output().unwrap();
                         }
                         let mut stdout = String::new();
                         if output.status.success() {
@@ -164,7 +164,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             temp.push_str(format!(" {}",i).as_str());
                             break;
                         }
-                        page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str(format!("DOWNLOAD COMPLETE FOR URL:{}",j)).await?.press_key("Enter").await?;
+                        page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?;
                         let output = Command::new("nircmd.exe").args(["sendkeypress","ctrl+v"]).output().unwrap();
                         let mut stdout = String::new();
                         if output.status.success() {
