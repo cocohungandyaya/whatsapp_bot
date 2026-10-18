@@ -49,7 +49,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
         }
         for i in list_c_dialogue{
-            if (i.contains("/v ")||i.contains("/fv ")||i.contains(" /v")||i.contains(" /fv")||i.contains(" /sv")||i.contains("/sv ")) && !(dialogue.contains(i)) && !(temp.contains(i)){
+            if (i.contains("/v ")||i.contains("/fv ")||i.contains(" /v")||i.contains(" /fv")||i.contains(" /sv")||i.contains("/sv ")||i.contains("/m ")||i.contains(" /m")) && !(dialogue.contains(i)) && !(temp.contains(i)){
                 let mut resolution:String=String::new();
                 let mut rev:String=String::new();
                 if i.contains(" /fv")||i.contains("/fv "){
@@ -57,6 +57,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }else if i.contains("/sv ")||i.contains(" /sv"){
                     resolution="bv*[height<=360]+ba/b[height<=360]".to_string();
                     rev="360p".to_string();
+                }else if i.contains("/m ")||i.contains(" /m"){
+                    resolution="ba".to_string();
+                    rev="MP3".to_string();
                 }else{
                     resolution="bv*[height<=720]+ba/b[height<=720]".to_string();
                     rev="720p".to_string();
@@ -73,6 +76,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             output=Command::new("yt-dlp").args(["--user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","--add-header","User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","-f",resolution.as_str(),j,"-o","output"]).output().unwrap();
                         }else if resolution=="bv*[height<=360]+ba/b[height<=360]"{
                             output=Command::new("yt-dlp").args(["--user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","--add-header","User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","-f",resolution.as_str(),j,"-o","output"]).output().unwrap();
+                        }else if resolution=="ba"{
+                            output=Command::new("yt-dlp").args(["--user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","--add-header","User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","-x","--audio-format","mp3",j,"-o","output"]).output().unwrap();
                         }else{
                             output=Command::new("yt-dlp").args(["--user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","--add-header","User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",j,"-o","output"]).output().unwrap();
                         }
@@ -88,71 +93,78 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             temp.push_str(format!(" {}",i).as_str());
                             break;
                         }
-                        if stdout.contains("output.webm"){
-                            let output = Command::new("ffmpeg").args(["-i","output.webm","output.mp4"]).output().unwrap();
-                            if output.status.success() {
-                                let stdout = String::from_utf8_lossy(&output.stdout);
-                                println!("Command output:\n{}", stdout);
-                            } else {
-                                let stderr = String::from_utf8_lossy(&output.stderr);
-                                eprintln!("Command failed:\n{}", stderr);
-                                page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str("FAIL to download,please retry later").await?.press_key("Enter").await?;
-                                c_dialogue=c_dialogue.split(i).collect::<Vec<_>>().join("");
-                                temp.push_str(format!(" {}",i).as_str());
-                                break;
+                        if !(resolution=="ba"){
+                            if stdout.contains("output.webm"){
+                                let output = Command::new("ffmpeg").args(["-i","output.webm","output.mp4"]).output().unwrap();
+                                if output.status.success() {
+                                    let stdout = String::from_utf8_lossy(&output.stdout);
+                                    println!("Command output:\n{}", stdout);
+                                } else {
+                                    let stderr = String::from_utf8_lossy(&output.stderr);
+                                    eprintln!("Command failed:\n{}", stderr);
+                                    page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str("FAIL to download,please retry later").await?.press_key("Enter").await?;
+                                    c_dialogue=c_dialogue.split(i).collect::<Vec<_>>().join("");
+                                    temp.push_str(format!(" {}",i).as_str());
+                                    break;
+                                }
+                                fs::remove_file("output.webm")?;
+                                println!("File deleted successfully");
                             }
-                            fs::remove_file("output.webm")?;
-                            println!("File deleted successfully");
-                        }
-                        else if stdout.contains("output.mkv"){
-                            let output = Command::new("ffmpeg").args(["-i","output.mkv","output.mp4"]).output().unwrap();
-                            if output.status.success() {
-                                let stdout = String::from_utf8_lossy(&output.stdout);
-                                println!("Command output:\n{}", stdout);
-                            } else {
-                                let stderr = String::from_utf8_lossy(&output.stderr);
-                                eprintln!("Command failed:\n{}", stderr);
-                                page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str("FAIL to download,please retry later").await?.press_key("Enter").await?;
-                                c_dialogue=c_dialogue.split(i).collect::<Vec<_>>().join("");
-                                temp.push_str(format!(" {}",i).as_str());
-                                break;
+                            else if stdout.contains("output.mkv"){
+                                let output = Command::new("ffmpeg").args(["-i","output.mkv","output.mp4"]).output().unwrap();
+                                if output.status.success() {
+                                    let stdout = String::from_utf8_lossy(&output.stdout);
+                                    println!("Command output:\n{}", stdout);
+                                } else {
+                                    let stderr = String::from_utf8_lossy(&output.stderr);
+                                    eprintln!("Command failed:\n{}", stderr);
+                                    page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str("FAIL to download,please retry later").await?.press_key("Enter").await?;
+                                    c_dialogue=c_dialogue.split(i).collect::<Vec<_>>().join("");
+                                    temp.push_str(format!(" {}",i).as_str());
+                                    break;
+                                }
+                                fs::remove_file("output.mkv")?;
+                                println!("File deleted successfully");
                             }
-                            fs::remove_file("output.mkv")?;
-                            println!("File deleted successfully");
-                        }
-                        else if stdout.contains("output.flv"){
-                            let output = Command::new("ffmpeg").args(["-i","output.flv","output.mp4"]).output().unwrap();
-                            if output.status.success() {
-                                let stdout = String::from_utf8_lossy(&output.stdout);
-                                println!("Command output:\n{}", stdout);
-                            } else {
-                                let stderr = String::from_utf8_lossy(&output.stderr);
-                                eprintln!("Command failed:\n{}", stderr);
-                                page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str("FAIL to download,please retry later").await?.press_key("Enter").await?;
-                                c_dialogue=c_dialogue.split(i).collect::<Vec<_>>().join("");
-                                temp.push_str(format!(" {}",i).as_str());
-                                break;
+                            else if stdout.contains("output.flv"){
+                                let output = Command::new("ffmpeg").args(["-i","output.flv","output.mp4"]).output().unwrap();
+                                if output.status.success() {
+                                    let stdout = String::from_utf8_lossy(&output.stdout);
+                                    println!("Command output:\n{}", stdout);
+                                } else {
+                                    let stderr = String::from_utf8_lossy(&output.stderr);
+                                    eprintln!("Command failed:\n{}", stderr);
+                                    page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str("FAIL to download,please retry later").await?.press_key("Enter").await?;
+                                    c_dialogue=c_dialogue.split(i).collect::<Vec<_>>().join("");
+                                    temp.push_str(format!(" {}",i).as_str());
+                                    break;
+                                }
+                                fs::remove_file("output.flv")?;
+                                println!("File deleted successfully");
                             }
-                            fs::remove_file("output.flv")?;
-                            println!("File deleted successfully");
-                        }
-                        else if stdout.contains("output.3gp"){
-                            let output = Command::new("ffmpeg").args(["-i","output.3gp","output.mp4"]).output().unwrap();
-                            if output.status.success() {
-                                let stdout = String::from_utf8_lossy(&output.stdout);
-                                println!("Command output:\n{}", stdout);
-                            } else {
-                                let stderr = String::from_utf8_lossy(&output.stderr);
-                                eprintln!("Command failed:\n{}", stderr);
-                                page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str("FAIL to download,please retry later").await?.press_key("Enter").await?;
-                                c_dialogue=c_dialogue.split(i).collect::<Vec<_>>().join("");
-                                temp.push_str(format!(" {}",i).as_str());
-                                break;
+                            else if stdout.contains("output.3gp"){
+                                let output = Command::new("ffmpeg").args(["-i","output.3gp","output.mp4"]).output().unwrap();
+                                if output.status.success() {
+                                    let stdout = String::from_utf8_lossy(&output.stdout);
+                                    println!("Command output:\n{}", stdout);
+                                } else {
+                                    let stderr = String::from_utf8_lossy(&output.stderr);
+                                    eprintln!("Command failed:\n{}", stderr);
+                                    page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.type_str("FAIL to download,please retry later").await?.press_key("Enter").await?;
+                                    c_dialogue=c_dialogue.split(i).collect::<Vec<_>>().join("");
+                                    temp.push_str(format!(" {}",i).as_str());
+                                    break;
+                                }
+                                fs::remove_file("output.3gp")?;
+                                println!("File deleted successfully");
                             }
-                            fs::remove_file("output.3gp")?;
-                            println!("File deleted successfully");
                         }
-                        let output = Command::new("powershell").args(["Set-Clipboard","-Path","output.mp4"]).output().unwrap();
+                        let mut output=Command::new("yt-dlp").output().unwrap();
+                        if resolution=="ba"{
+                            output = Command::new("powershell").args(["Set-Clipboard","-Path","output.mp3"]).output().unwrap();
+                        }else{
+                            output = Command::new("powershell").args(["Set-Clipboard","-Path","output.mp4"]).output().unwrap();
+                        }
                         if output.status.success() {
                             let stdout = String::from_utf8_lossy(&output.stdout);
                             println!("Command output:\n{}", stdout);
@@ -178,9 +190,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             temp.push_str(format!(" {}",i).as_str());
                             break;
                         }
-                        sleep(Duration::from_secs(60));
+                        if resolution=="ba"{
+                            sleep(Duration::from_secs(30));
+                        }else{
+                            sleep(Duration::from_secs(60));
+                        }
                         page.find_element("#main > footer > div.xnpuxes.x1n2onr6.xhtitgo.x9f619.x78zum5.x1q0g3np.xuk3077.xjbqb8w.x1wiwyrm.xquzyny.xvc5jky.x11t971q.copyable-area > div > span > div > div > div > div.x1n2onr6.xh8yej3.xjdcl3y > div.x1hx0egp.x6ikm8r.x1odjw0f.x1k6rcq7.x6prxxf > p").await?.press_key("Enter").await?;
-                        fs::remove_file("output.mp4");
+                        if resolution=="ba"{
+                            sleep(Duration::from_secs(30));
+                            fs::remove_file("output.mp3");
+                        }else{
+                            fs::remove_file("output.mp4");
+                        } 
                         println!("File deleted successfully");
                         c_dialogue=c_dialogue.split(i).collect::<Vec<_>>().join("");
                         temp.push_str(format!(" {}",i).as_str());
